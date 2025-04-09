@@ -1,0 +1,827 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #e0e0e0;
+    line-height: 1.4;
+    background-color: #121212;
+}
+
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header {
+    display: none;
+    height: 0;
+}
+
+/* Treemap Container */
+.bentogrid {
+    display: block; /* Reverted from grid */
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Todo Item Styling */
+.todo-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.75rem;
+    box-sizing: border-box;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+}
+
+.todo-item:hover {
+    box-shadow: none;
+}
+
+.todo-title {
+    margin: 0;
+    text-align: center;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    font-weight: 500;
+    width: 100%;
+    transition: font-size 0.2s ease;
+}
+
+/* Font size classes for different grid sizes */
+.todo-item.large .todo-title {
+    font-size: 24px !important;
+    font-weight: 600;
+}
+
+.todo-item.medium .todo-title {
+    font-size: 18px !important;
+    font-weight: 500;
+}
+
+.todo-item.small .todo-title {
+    font-size: 14px !important;
+    font-weight: 400;
+}
+
+.todo-item.tiny .todo-title {
+    font-size: 12px !important;
+    font-weight: 400;
+}
+
+/* Priority badge */
+.priority {
+    display: none;
+}
+
+/* Delete button - hidden by default, show on hover */
+.delete-btn {
+    display: none;
+}
+
+/* Checkmark button */
+.checkmark-btn {
+    display: none;
+}
+
+/* Update tiny todo styles */
+.tiny-todo .checkmark-btn {
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+}
+
+/* Small items get smaller text */
+.tiny-todo {
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.tiny-todo .priority,
+.tiny-todo .delete-btn {
+    font-size: 14px !important;
+    width: 12px;
+    height: 12px;
+}
+
+/* Floating action button */
+.floating-add-btn {
+    position: relative;
+    width: 80px;
+    height: 100%;
+    border-radius: 20px;
+    background-color: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: none;
+    z-index: 100;
+    border: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-add-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Dark mode button specific styles */
+.dark-mode-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    z-index: 101;
+}
+
+.dark-mode-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.dark-mode-btn img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+/* Dark mode theme */
+body.dark-mode {
+    background-color: #121212;
+}
+
+body.dark-mode .bentogrid {
+    background-color: #121212;
+}
+
+body.dark-mode .todo-item {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .todo-item.placeholder {
+    background-color: #1a1a1a;
+    color: #666;
+}
+
+body.dark-mode .modal {
+    background-color: #121212;
+}
+
+body.dark-mode .modal-content {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #2a2a2a;
+    color: #ffffff !important;
+    border-color: #333;
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+    background-color: #333;
+    color: #ffffff !important;
+}
+
+body.dark-mode .color-option {
+    border-color: #444;
+}
+
+body.dark-mode .color-option.selected {
+    box-shadow: 0 0 0 2px #444;
+}
+
+body.dark-mode .close-modal {
+    color: #ffffff;
+}
+
+body.dark-mode .close-modal:hover {
+    color: #ffffff;
+}
+
+body.dark-mode .priority-input label,
+body.dark-mode .color-palette label,
+body.dark-mode .notes-input label {
+    color: #ffffff;
+}
+
+body.dark-mode .modal h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .auto-save-info {
+    color: #ffffff;
+}
+
+body.dark-mode #taskInput,
+body.dark-mode #editTaskInput,
+body.dark-mode #priorityInput,
+body.dark-mode #editPriorityInput,
+body.dark-mode #notesInput,
+body.dark-mode #editNotesInput {
+    color: #ffffff !important;
+    background-color: #2a2a2a;
+}
+
+body.dark-mode #taskInput::placeholder,
+body.dark-mode #editTaskInput::placeholder,
+body.dark-mode #notesInput::placeholder,
+body.dark-mode #editNotesInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .edit-controls {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .task-header {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .modal-form {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .modal-actions {
+    background-color: #1e1e1e;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121212;
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #1e1e1e;
+    margin: 0;
+    padding: 2rem;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: #e0e0e0;
+}
+
+.modal h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0;
+    background: #2a2a2a;
+    font-size: 1rem;
+    color: #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.modal-form input:focus {
+    outline: none;
+    background-color: #333;
+}
+
+/* Simplify the editing modal UI */
+.priority-input {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.priority-input label {
+    white-space: nowrap;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #bbb !important;
+    font-weight: 300 !important;
+}
+
+.priority-input input {
+    width: 60px;
+}
+
+.notes-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.notes-input label {
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #bbb !important;
+    font-weight: 300 !important;
+}
+
+.notes-input textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 0.5rem;
+    border: none;
+    background: #2a2a2a;
+    resize: vertical;
+    font-family: inherit;
+    color: #e0e0e0;
+}
+
+.notes-input textarea:focus {
+    outline: none;
+    background-color: #333;
+}
+
+/* Color selection */
+.color-palette {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.color-palette label {
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #bbb !important;
+    font-weight: 300 !important;
+}
+
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.color-option {
+    width: 20px !important;
+    height: 20px !important;
+    border: none !important;
+    margin: 0.2rem !important;
+    transition: all 0.2s ease !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.color-option:hover {
+    transform: scale(1.2) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.color-option.selected {
+    transform: scale(1.3) !important;
+    box-shadow: 0 0 0 2px #ffffff, 0 4px 8px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .color-option.selected {
+    box-shadow: 0 0 0 2px #000000, 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Action button */
+#submitTaskBtn, #saveTaskBtn {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+#submitTaskBtn:hover, #saveTaskBtn:hover {
+    background-color: #444;
+}
+
+/* Placeholder styling */
+.todo-item.placeholder {
+    background-color: #1a1a1a;
+    color: #666;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    font-weight: 300;
+}
+
+/* Edit modal specific styling */
+#editTaskModal .modal-content {
+    width: 95%;
+    max-width: 600px;
+}
+
+/* Make the edit task input stand out */
+#editTaskInput {
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding: 1rem 0;
+    border: none;
+    border-bottom: 1px solid #333;
+    margin-bottom: 1.5rem;
+    background: transparent;
+    color: #e0e0e0;
+}
+
+/* Place secondary controls in a more compact layout */
+.edit-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+}
+
+.edit-controls > div {
+    flex: 1 1 auto;
+    min-width: 180px;
+}
+
+.grid-filler {
+    background-color: transparent;
+    min-height: 20px; /* Smaller minimum size */
+    min-width: 20px;
+}
+
+.notes {
+    display: none;
+}
+
+.todo-item .notes textarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    background: transparent;
+}
+
+.EasyMDEContainer {
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.EasyMDEContainer .editor-toolbar {
+    border: none;
+    background: transparent;
+}
+
+.EasyMDEContainer .CodeMirror {
+    border: none !important;
+    background: transparent !important;
+    height: 100% !important;
+}
+
+.EasyMDEContainer .CodeMirror-focused {
+    border: none !important;
+    outline: none !important;
+}
+
+.EasyMDEContainer .editor-toolbar button {
+    color: #000000;
+    border: none;
+    background: transparent;
+}
+
+.EasyMDEContainer .editor-toolbar button:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+/* Pastel Colors for Priority Levels - Darker versions */
+.todo-item.priority-1 { background-color: #2a1a1a; } /* Dark Misty Rose */
+.todo-item.priority-2 { background-color: #2a221a; } /* Dark Peach Puff */
+.todo-item.priority-3 { background-color: #2a241a; } /* Dark Moccasin */
+.todo-item.priority-4 { background-color: #1a2a1a; } /* Dark Honeydew */
+.todo-item.priority-5 { background-color: #1a2a2a; } /* Dark Light Cyan */
+.todo-item.priority-6 { background-color: #1a1a2a; } /* Dark Lavender */
+.todo-item.priority-7 { background-color: #2a1a2a; } /* Dark Lavender Blush */
+.todo-item.priority-8 { background-color: #2a2a1a; } /* Dark Beige */
+.todo-item.priority-9 { background-color: #1a1f2a; } /* Dark Alice Blue */
+.todo-item.priority-10 { background-color: #2a281a; } /* Dark Cornsilk */
+
+.color-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.color-palette {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.selected {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px #444;
+}
+
+#colorInput {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#colorInput::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#colorInput::-webkit-color-swatch {
+    border: 1px solid #000000;
+    border-radius: 50%;
+}
+
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    border-radius: 50%;
+}
+
+@media (max-width: 1200px) {
+    /* Removing conflicting masonry grid styles
+    .masonry-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .todo-item[data-priority="9"],
+    .todo-item[data-priority="10"] {
+        grid-column: span 4;
+    }
+    
+    .todo-item[data-priority="5"],
+    .todo-item[data-priority="7"],
+    .todo-item[data-priority="8"] {
+        grid-column: span 3;
+    }
+    */
+}
+
+@media (max-width: 768px) {
+    /* Removing conflicting masonry grid styles
+    .masonry-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .todo-item[data-priority="8"],
+    .todo-item[data-priority="9"],
+    .todo-item[data-priority="10"] {
+        grid-column: span 3;
+    }
+    
+    .todo-item[data-priority="5"],
+    .todo-item[data-priority="6"],
+    .todo-item[data-priority="7"] {
+        grid-column: span 2;
+    }
+    */
+}
+
+@media (max-width: 480px) {
+    /* Removing conflicting masonry grid styles
+    .masonry-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .todo-item[data-priority] {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+    */
+}
+
+.todo-item .edit-btn {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    z-index: 2;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.todo-item .edit-btn:hover {
+    opacity: 1;
+}
+
+.notes-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.notes-input textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 0.5rem;
+    border: 1px solid #000000;
+    background: transparent;
+    resize: vertical;
+    font-family: inherit;
+}
+
+#editTaskModal .modal-content {
+    width: 90%;
+    max-width: 800px;
+    margin: 5% auto;
+}
+
+/* Remove conflicting fixed positioning from media query */
+@media (max-width: 480px) {
+    /* ... other styles ... */
+}
+
+/* Ensure no other styles override the fixed positioning */
+/* Remove duplicated .floating-add-btn rules further down */
+
+.modal-form input,
+.modal-form textarea,
+.color-option,
+#submitTaskBtn, 
+#saveTaskBtn,
+/* .floating-add-btn, */ /* Remove rule here */
+.priority {
+    border-radius: 0;
+}
+
+#editNotesInput {
+    border: none;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    font-size: 1rem;
+    min-height: 200px;
+}
+
+.auto-save-info {
+    font-size: 14px !important;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#markDoneBtn {
+    background-color: #2a2a2a;
+    color: #666;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0;
+}
+
+#markDoneBtn:hover {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+/* Random pill/rounded edge styles */
+.todo-item[data-rounded="top"] {
+    border-top-left-radius: 999px;
+    border-top-right-radius: 999px;
+}
+
+.todo-item[data-rounded="right"] {
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
+}
+
+.todo-item[data-rounded="bottom"] {
+    border-bottom-left-radius: 999px;
+    border-bottom-right-radius: 999px;
+}
+
+.todo-item[data-rounded="left"] {
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+}
+
+/* Floating sidebar container */
+.floating-sidebar {
+    position: fixed;
+    top: 0;
+    right: -80px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.floating-sidebar.visible {
+    right: 0;
+    transform: translateX(10px);
+    pointer-events: auto;
+} 
